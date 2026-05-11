@@ -3,7 +3,7 @@
 Матеріали доповіді на методичному об'єднанні викладачів комп'ютерних дисциплін.  
 **Тернопільський фаховий коледж ТНТУ ім. Івана Пулюя, 2026**
 
-🌐 **GitHub Pages:** https://lisvolod.github.io/metod-conference-2026/
+**GitHub Pages:** https://lisvolod.github.io/metod-conference-2026/
 
 ---
 
