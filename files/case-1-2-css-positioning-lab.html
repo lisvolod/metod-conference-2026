@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Лабораторна робота — Позиціонування в CSS</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Onest:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3347;
+    --accent: #4f8ef7;
+    --accent2: #7c5cfc;
+    --green: #3dd68c;
+    --orange: #f5a623;
+    --red: #f76f6f;
+    --text: #e8eaf0;
+    --text-muted: #7a82a0;
+    --code-bg: #141720;
+    --radius: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Onest', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 16px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #0f1117 0%, #1a1d27 60%, #1a1427 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 24px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%; transform: translateX(-50%);
+    width: 500px; height: 300px;
+    background: radial-gradient(ellipse, rgba(124,92,252,.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-badge {
+    display: inline-block;
+    background: rgba(124,92,252,.12);
+    border: 1px solid rgba(124,92,252,.3);
+    color: var(--accent2);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+  header h1 {
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 700;
+    letter-spacing: -.02em;
+    margin-bottom: 8px;
+  }
+  header h1 span { color: var(--accent2); }
+  .header-meta {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+  .meta-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .meta-chip strong { color: var(--text); }
+
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* ── INFO SECTION ── */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .info-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+  }
+  .info-card-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .info-card-value {
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  /* ── МЕТА ── */
+  .meta-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 40px;
+  }
+  .meta-block h2 {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--accent);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .meta-block ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .meta-block li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text);
+  }
+  .meta-block li::before {
+    content: '✓';
+    color: var(--green);
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* ── TASK ── */
+  .task {
+    margin-bottom: 48px;
+  }
+  .task-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+  }
+  .task-num {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+  .task-title-block h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: -.01em;
+  }
+  .task-title-block p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+  .difficulty {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .diff-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+  .diff-dot.filled { background: var(--orange); }
+
+  .task-body {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 16px;
+  }
+
+  .task-description {
+    font-size: 15px;
+    margin-bottom: 20px;
+    line-height: 1.8;
+  }
+
+  /* ── REQUIREMENTS LIST ── */
+  .req-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .req-list li {
+    display: flex;
+    gap: 12px;
+    font-size: 14px;
+    align-items: flex-start;
+  }
+  .req-num {
+    width: 22px; height: 22px;
+    background: rgba(79,142,247,.15);
+    border: 1px solid rgba(79,142,247,.3);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 16px 0;
+  }
+  .code-header {
+    background: var(--surface2);
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .code-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    margin-left: auto;
+  }
+  .code-block pre {
+    padding: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-x: auto;
+    color: var(--text);
+  }
+  .kw { color: #c792ea; }
+  .prop { color: #82aaff; }
+  .val { color: #c3e88d; }
+  .sel { color: #ffcb6b; }
+  .cmt { color: #546e7a; font-style: italic; }
+  .tag { color: #f07178; }
+  .attr { color: #ffcb6b; }
+  .str { color: #c3e88d; }
+
+  /* ── WIREFRAME ── */
+  .wireframe {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin: 16px 0;
+  }
+  .wireframe-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 12px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+
+  /* ── HINT ── */
+  .hint {
+    background: rgba(245,166,35,.06);
+    border: 1px solid rgba(245,166,35,.2);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .hint-header {
+    background: rgba(245,166,35,.1);
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--orange);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    user-select: none;
+  }
+  .hint-body {
+    padding: 16px 18px;
+    font-size: 14px;
+    display: none;
+    line-height: 1.7;
+  }
+  .hint-body.open { display: block; }
+  .hint-body code {
+    font-family: 'JetBrains Mono', monospace;
+    background: rgba(0,0,0,.3);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 13px;
+    color: var(--orange);
+  }
+
+  /* ── CRITERIA ── */
+  .criteria {
+    background: rgba(61,214,140,.04);
+    border: 1px solid rgba(61,214,140,.2);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-top: 16px;
+  }
+  .criteria h4 {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--green);
+    margin-bottom: 12px;
+  }
+  .criteria-items {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .crit-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,.04);
+  }
+  .crit-item:last-child { border-bottom: none; }
+  .crit-pts {
+    color: var(--green);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-left: 16px;
+  }
+
+  /* ── BONUS ── */
+  .bonus-tag {
+    display: inline-block;
+    background: rgba(124,92,252,.15);
+    border: 1px solid rgba(124,92,252,.3);
+    color: var(--accent2);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: 8px;
+    vertical-align: middle;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+
+  /* ── SUBMISSION ── */
+  .submission {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-top: 48px;
+  }
+  .submission h2 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .submission ol {
+    counter-reset: slist;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .submission li {
+    counter-increment: slist;
+    display: flex;
+    gap: 12px;
+    font-size: 14px;
+    align-items: flex-start;
+  }
+  .submission li::before {
+    content: counter(slist);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 22px; height: 22px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 600px) {
+    .info-grid { grid-template-columns: 1fr; }
+    .task-header { flex-wrap: wrap; }
+    .difficulty { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-badge">Лабораторна робота</div>
+  <h1>Позиціонування в <span>CSS</span></h1>
+  <div class="header-meta">
+    <div class="meta-chip">Дисципліна: <strong>Веб-технології</strong></div>
+    <div class="meta-chip">⏱ Час виконання: <strong>90 хв</strong></div>
+    <div class="meta-chip">Максимум балів: <strong>30 (+ 5 бонусних)</strong></div>
+  </div>
+</header>
+
+<main>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="info-card-label">Тема</div>
+      <div class="info-card-value">Позиціонування в CSS: position, z-index, overflow, visibility</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-label">Форма здачі</div>
+      <div class="info-card-value">HTML/CSS файли або посилання на GitHub Pages</div>
+    </div>
+  </div>
+
+  <div class="meta-block">
+    <h2>Мета роботи</h2>
+    <ul>
+      <li>Засвоїти на практиці різні значення властивості <code style="font-family:'JetBrains Mono'">position</code> та їхню взаємодію з <code style="font-family:'JetBrains Mono'">top/left/right/bottom</code></li>
+      <li>Навчитися контролювати порядок накладання елементів за допомогою <code style="font-family:'JetBrains Mono'">z-index</code></li>
+      <li>Розуміти різницю між <code style="font-family:'JetBrains Mono'">overflow: hidden/scroll/auto</code> та застосовувати у реальних задачах</li>
+      <li>Вміти обирати між <code style="font-family:'JetBrains Mono'">visibility: hidden</code> та <code style="font-family:'JetBrains Mono'">display: none</code> залежно від задачі</li>
+      <li>Реалізувати типові UI-компоненти, що базуються на позиціонуванні</li>
+    </ul>
+  </div>
+
+  <!-- ══════════════════════
+       ЗАВДАННЯ 1
+       ══════════════════════ -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">1</div>
+      <div class="task-title-block">
+        <h2>Картка товару зі значком акції</h2>
+        <p>position: relative + absolute · z-index</p>
+      </div>
+      <div class="difficulty">
+        <span style="font-size:11px;color:var(--text-muted);margin-right:4px">Рівень:</span>
+        <div class="diff-dot filled"></div>
+        <div class="diff-dot filled"></div>
+        <div class="diff-dot"></div>
+      </div>
+    </div>
+
+    <div class="task-body">
+      <p class="task-description">
+        Створи картку товару, на якій у верхньому лівому куті розміщений значок "АКЦІЯ". При наведенні миші на картку — повинна з'являтися напівпрозора підказка з описом товару.
+      </p>
+
+      <ul class="req-list">
+        <li><div class="req-num">1</div> Картка має фіксований розмір (наприклад, 220×280px), зображення-заглушка (можна кольоровий блок), назва та ціна товару</li>
+        <li><div class="req-num">2</div> Значок "АКЦІЯ" розміщений у верхньому лівому куті картки через position: absolute</li>
+        <li><div class="req-num">3</div> Підказка (overlay) при наведенні покриває картку напівпрозорим фоном з описом — також через position: absolute </li>
+        <li><div class="req-num">4</div> Значок "АКЦІЯ" повинен бути поверх overlay (використай z-index)</li>
+        <li><div class="req-num">5</div> Перехід overlay — плавний (transition: opacity .3s)</li>
+      </ul>
+
+      <div class="wireframe">
+        <div class="wireframe-label">📐 Очікувана структура</div>
+        <div style="position:relative;width:180px;height:220px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;overflow:hidden;font-family:'JetBrains Mono';font-size:11px;">
+          <div style="background:rgba(79,142,247,.15);height:120px;display:flex;align-items:center;justify-content:center;color:var(--text-muted)">[ зображення ]</div>
+          <div style="padding:10px;">
+            <div style="color:var(--text);margin-bottom:4px">Назва товару</div>
+            <div style="color:var(--orange)">₴ 599</div>
+          </div>
+          <div style="position:absolute;top:8px;left:8px;background:var(--red);color:white;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:700;z-index:2">АКЦІЯ</div>
+          <div style="position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;color:white;font-size:10px;text-align:center;padding:8px">Опис товару при наведенні</div>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dot" style="background:#f76f6f"></div>
+          <div class="code-dot" style="background:#f5a623"></div>
+          <div class="code-dot" style="background:#3dd68c"></div>
+          <span class="code-label">HTML — стартова структура</span>
+        </div>
+        <pre><span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"card"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"card__image"</span><span class="tag">&gt;&lt;/div&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"card__badge"</span><span class="tag">&gt;</span>АКЦІЯ<span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"card__overlay"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;p&gt;</span>Опис товару...<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"card__info"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;h3&gt;</span>Назва товару<span class="tag">&lt;/h3&gt;</span>
+    <span class="tag">&lt;p</span> <span class="attr">class</span>=<span class="str">"card__price"</span><span class="tag">&gt;</span>₴ 599<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span></pre>
+      </div>
+
+      <div class="hint">
+        <div class="hint-header" onclick="toggleHint(this)">
+          💡 Підказка (натисни якщо застряг)
+        </div>
+        <div class="hint-body">
+          Батьківській <code>.card</code> дай <code>position: relative; overflow: hidden</code>.<br>
+          Значку <code>.card__badge</code>: <code>position: absolute; top: 8px; left: 8px; z-index: 2</code>.<br>
+          Overlay <code>.card__overlay</code>: <code>position: absolute; inset: 0; opacity: 0; z-index: 1</code>, а на <code>.card:hover .card__overlay</code> → <code>opacity: 1</code>.
+        </div>
+      </div>
+    </div>
+
+    <div class="criteria">
+      <h4>Критерії оцінювання</h4>
+      <div class="criteria-items">
+        <div class="crit-item"><span>Правильна структура HTML</span><span class="crit-pts">2 бали</span></div>
+        <div class="crit-item"><span>position: relative на картці, absolute на значку і overlay</span><span class="crit-pts">3 бали</span></div>
+        <div class="crit-item"><span>z-index: значок поверх overlay</span><span class="crit-pts">2 бали</span></div>
+        <div class="crit-item"><span>Плавна анімація overlay при hover</span><span class="crit-pts">2 бали</span></div>
+        <div class="crit-item"><span>Загальний вигляд та охайність коду</span><span class="crit-pts">1 бал</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════
+       ЗАВДАННЯ 2
+       ══════════════════════ -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">2</div>
+      <div class="task-title-block">
+        <h2>Сторінка з фіксованою навігацією та скролом</h2>
+        <p>position: fixed · sticky · overflow · visibility</p>
+      </div>
+      <div class="difficulty">
+        <span style="font-size:11px;color:var(--text-muted);margin-right:4px">Рівень:</span>
+        <div class="diff-dot filled"></div>
+        <div class="diff-dot filled"></div>
+        <div class="diff-dot filled"></div>
+      </div>
+    </div>
+
+    <div class="task-body">
+      <p class="task-description">
+        Створи односторінковий лендінг з фіксованою навігацією, яка залишається на екрані при прокручуванні. Кнопка "↑ Вгору" з'являється після прокрутки 200px і зникає коли вгорі. Секції мають "липкі" підзаголовки.
+      </p>
+
+      <ul class="req-list">
+        <li><div class="req-num">1</div> Навігаційна панель зверху: position: fixed, займає всю ширину, завжди видима при скролі</li>
+        <li><div class="req-num">2</div> Мінімум 3 секції контенту (достатньо для появи скролу), кожна з підзаголовком position: sticky; top: 60px (60px — висота навбару)</li>
+        <li><div class="req-num">3</div> Кнопка "↑" у нижньому правому куті: position: fixed. Використовує visibility: hidden коли прихована (не display: none) — для плавної анімації opacity</li>
+        <li><div class="req-num">4</div> Бічна панель чи блок із overflow-y: auto; max-height: 200px — scrollable список пунктів</li>
+        <li><div class="req-num">5</div> JavaScript: слухач scroll на window, що перемикає видимість кнопки "↑"</li>
+      </ul>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dot" style="background:#f76f6f"></div>
+          <div class="code-dot" style="background:#f5a623"></div>
+          <div class="code-dot" style="background:#3dd68c"></div>
+          <span class="code-label">JS — підказка для кнопки "вгору"</span>
+        </div>
+        <pre><span class="kw">const</span> btn = document.querySelector(<span class="val">'.scroll-top'</span>);
+
+window.addEventListener(<span class="val">'scroll'</span>, () =&gt; {
+  <span class="kw">if</span> (window.scrollY &gt; <span class="val">200</span>) {
+    btn.style.visibility = <span class="val">'visible'</span>;
+    btn.style.opacity = <span class="val">'1'</span>;
+  } <span class="kw">else</span> {
+    btn.style.visibility = <span class="val">'hidden'</span>;
+    btn.style.opacity = <span class="val">'0'</span>;
+  }
+});
+
+btn.addEventListener(<span class="val">'click'</span>, () =&gt; {
+  window.scrollTo({ <span class="prop">top</span>: <span class="val">0</span>, <span class="prop">behavior</span>: <span class="val">'smooth'</span> });
+});</pre>
+      </div>
+
+      <div class="hint">
+        <div class="hint-header" onclick="toggleHint(this)">
+          💡 Підказка щодо sticky підзаголовків
+        </div>
+        <div class="hint-body">
+          Липкий підзаголовок повинен мати <code>position: sticky; top: 60px</code>, де 60px — це висота фіксованого навбару. Якщо написати <code>top: 0</code>, підзаголовок прилипне під навбаром і той його перекриє. Також переконайся, що жоден батьківський елемент не має <code>overflow: hidden</code>.
+        </div>
+      </div>
+    </div>
+
+    <div class="criteria">
+      <h4>Критерії оцінювання</h4>
+      <div class="criteria-items">
+        <div class="crit-item"><span>position: fixed навбар, завжди видимий</span><span class="crit-pts">2 бали</span></div>
+        <div class="crit-item"><span>position: sticky підзаголовки секцій</span><span class="crit-pts">2 бали</span></div>
+        <div class="crit-item"><span>Кнопка "вгору" з visibility (не display:none)</span><span class="crit-pts">2 бали</span></div>
+        <div class="crit-item"><span>JavaScript: кнопка з'являється при скролі 200px</span><span class="crit-pts">2 бали</span></div>
+        <div class="crit-item"><span>overflow-y: auto блок зі скролом</span><span class="crit-pts">2 бали</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════
+       ЗАВДАННЯ 3
+       ══════════════════════ -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">3</div>
+      <div class="task-title-block">
+        <h2>Модальне вікно <span class="bonus-tag">+ бонус</span></h2>
+        <p>position: fixed · z-index · overflow: hidden на body</p>
+      </div>
+      <div class="difficulty">
+        <span style="font-size:11px;color:var(--text-muted);margin-right:4px">Рівень:</span>
+        <div class="diff-dot filled"></div>
+        <div class="diff-dot filled"></div>
+        <div class="diff-dot filled"></div>
+      </div>
+    </div>
+
+    <div class="task-body">
+      <p class="task-description">
+        Реалізуй модальне вікно (popup / dialog). Кнопка "Відкрити" відображає напівпрозорий backdrop та вікно по центру екрану. При відкриті модалки — сторінка позаду не прокручується. Клік на backdrop або кнопку ✕ закриває вікно.
+      </p>
+
+      <ul class="req-list">
+        <li><div class="req-num">1</div> Backdrop: position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 100</li>
+        <li><div class="req-num">2</div> Модальне вікно: position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); z-index: 101</li>
+        <li><div class="req-num">3</div> При відкритті модалки: document.body.style.overflow = 'hidden' (сторінка не скролиться)</li>
+        <li><div class="req-num">4</div> При закритті: overflow повертається до 'auto'</li>
+        <li><div class="req-num">5</div> Кнопка ✕ у правому верхньому куті модалки — теж через position: absolute</li>
+      </ul>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dot" style="background:#f76f6f"></div>
+          <div class="code-dot" style="background:#f5a623"></div>
+          <div class="code-dot" style="background:#3dd68c"></div>
+          <span class="code-label">HTML — структура модалки</span>
+        </div>
+        <pre><span class="cmt">&lt;!-- Тригер --&gt;</span>
+<span class="tag">&lt;button</span> <span class="attr">id</span>=<span class="str">"openModal"</span><span class="tag">&gt;</span>Відкрити<span class="tag">&lt;/button&gt;</span>
+
+<span class="cmt">&lt;!-- Backdrop --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"modal-backdrop"</span> <span class="attr">id</span>=<span class="str">"backdrop"</span><span class="tag">&gt;</span>
+  <span class="cmt">&lt;!-- Вікно --&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="str">"modal"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;button</span> <span class="attr">class</span>=<span class="str">"modal__close"</span> <span class="attr">id</span>=<span class="str">"closeModal"</span><span class="tag">&gt;</span>✕<span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;h2&gt;</span>Заголовок модалки<span class="tag">&lt;/h2&gt;</span>
+    <span class="tag">&lt;p&gt;</span>Вміст...<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span></pre>
+      </div>
+
+      <div class="hint">
+        <div class="hint-header" onclick="toggleHint(this)">
+          💡 Підказка щодо центрування та backdrop
+        </div>
+        <div class="hint-body">
+          Трюк <code>top: 50%; left: 50%; transform: translate(-50%, -50%)</code> — класичний спосіб центрування абсолютного/фіксованого елемента. Спочатку лівий верхній кут вікна в центрі екрану, потім <code>transform</code> зміщує його на половину власної ширини/висоти назад.<br><br>
+          Щоб клік на backdrop (але не на вікно) закривав модалку, порівняй <code>event.target === backdrop</code>.
+        </div>
+      </div>
+
+      <div style="background:rgba(124,92,252,.06);border:1px solid rgba(124,92,252,.2);border-radius:8px;padding:16px 18px;margin-top:16px;">
+        <p style="font-size:13px;font-weight:700;color:var(--accent2);margin-bottom:8px">⭐ Бонусне завдання (+5 балів)</p>
+        <p style="font-size:13px;color:var(--text-muted)">Додай анімацію появи модалки: вікно "вїжджає" знизу (translateY) і стає видимим (opacity 0→1) за 0.3с. Для цього використай CSS-клас <code style="font-family:'JetBrains Mono'">.modal--visible</code>, який додається/прибирається через JS.</p>
+      </div>
+    </div>
+
+    <div class="criteria">
+      <h4>Критерії оцінювання</h4>
+      <div class="criteria-items">
+        <div class="crit-item"><span>Backdrop: position: fixed; inset: 0; z-index правильний</span><span class="crit-pts">2 бали</span></div>
+        <div class="crit-item"><span>Модалка центрована через transform: translate</span><span class="crit-pts">2 бали</span></div>
+        <div class="crit-item"><span>overflow: hidden на body при відкритті</span><span class="crit-pts">2 бали</span></div>
+        <div class="crit-item"><span>Кнопка ✕ через position: absolute</span><span class="crit-pts">1 бал</span></div>
+        <div class="crit-item"><span>Закриття по кліку на backdrop</span><span class="crit-pts">1 бал</span></div>
+        <div class="crit-item"><span>⭐ Бонус: анімація появи/зникнення</span><span class="crit-pts">+5 балів</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ЗДАЧА ── -->
+  <div class="submission">
+    <h2>Порядок здачі роботи</h2>
+    <ol>
+      <li>Кожне завдання — в окремому HTML-файлі: <code style="font-family:'JetBrains Mono'">task1.html</code>, <code style="font-family:'JetBrains Mono'">task2.html</code>, <code style="font-family:'JetBrains Mono'">task3.html</code></li>
+      <li>CSS може бути в тому самому файлі (в тегу <code style="font-family:'JetBrains Mono'">&lt;style&gt;</code>) або в окремому <code style="font-family:'JetBrains Mono'">.css</code> файлі</li>
+      <li>Завантажити на курс у Moodle або надіслати посилання на GitHub / CodePen</li>
+      <li>Код має бути охайним: відступи, зрозумілі назви класів (BEM або власна логіка)</li>
+    </ol>
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+      <span style="font-size:13px;color:var(--text-muted)">Загальна сума: 30 балів основних + 5 бонусних</span>
+      <div style="display:flex;gap:8px;">
+        <span style="background:rgba(61,214,140,.1);border:1px solid rgba(61,214,140,.3);color:var(--green);font-size:12px;padding:4px 12px;border-radius:6px;font-weight:600">Завдання 1: 10 б</span>
+        <span style="background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.3);color:var(--accent);font-size:12px;padding:4px 12px;border-radius:6px;font-weight:600">Завдання 2: 10 б</span>
+        <span style="background:rgba(124,92,252,.1);border:1px solid rgba(124,92,252,.3);color:var(--accent2);font-size:12px;padding:4px 12px;border-radius:6px;font-weight:600">Завдання 3: 10 б</span>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+function toggleHint(header) {
+  const body = header.nextElementSibling;
+  body.classList.toggle('open');
+  header.style.color = body.classList.contains('open') ? 'var(--green)' : 'var(--orange)';
+}
+</script>
+</body>
+</html>

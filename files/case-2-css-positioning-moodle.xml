@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+
+  <!-- ══════════════════════════════════════════════════
+       ПИТАННЯ 1 — одиночний вибір
+       Тема: position: static vs інші значення
+       ══════════════════════════════════════════════════ -->
+  <question type="multichoice">
+    <name>
+      <text>CSS Positioning — Q1: position: static і top/left</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[
+        <p>Розглянь наступний CSS-код:</p>
+        <pre style="background:#f4f4f4;padding:10px;border-radius:4px;">
+.box {
+  position: static;
+  top: 50px;
+  left: 30px;
+}
+        </pre>
+        <p>Що відбудеться з елементом <code>.box</code>?</p>
+      ]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <shuffleanswers>1</shuffleanswers>
+    <single>true</single>
+    <answernumbering>abc</answernumbering>
+
+    <answer fraction="0">
+      <text>Елемент зміститься на 50px вниз і 30px праворуч від свого нормального місця</text>
+      <feedback><text>Ні. Зміщення відбувається при position: relative, але не static.</text></feedback>
+    </answer>
+    <answer fraction="100">
+      <text>Властивості top і left будуть проігноровані — елемент залишиться на своєму місці</text>
+      <feedback><text>Правильно! При position: static властивості top, left, right, bottom не мають жодного ефекту.</text></feedback>
+    </answer>
+    <answer fraction="0">
+      <text>Елемент прив'яжеться до лівого верхнього кута сторінки</text>
+      <feedback><text>Ні. Прив'язка до кута сторінки — поведінка position: absolute (відносно батька) або fixed (відносно viewport).</text></feedback>
+    </answer>
+    <answer fraction="0">
+      <text>Виникне помилка CSS і стиль не застосується</text>
+      <feedback><text>Ні. CSS не генерує помилок при некоректних комбінаціях — він просто ігнорує невалідні для контексту властивості.</text></feedback>
+    </answer>
+  </question>
+
+  <!-- ══════════════════════════════════════════════════
+       ПИТАННЯ 2 — одиночний вибір
+       Тема: position absolute — до чого прив'язується
+       ══════════════════════════════════════════════════ -->
+  <question type="multichoice">
+    <name>
+      <text>CSS Positioning — Q2: absolute і батьківський контекст</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[
+        <p>Є така структура HTML:</p>
+        <pre style="background:#f4f4f4;padding:10px;border-radius:4px;">
+&lt;div class="grandparent"&gt;       &lt;!-- position: static --&gt;
+  &lt;div class="parent"&gt;           &lt;!-- position: relative --&gt;
+    &lt;div class="child"&gt;&lt;/div&gt;   &lt;!-- position: absolute; top: 0; left: 0 --&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+        </pre>
+        <p>Відносно якого елемента буде позиціонований <code>.child</code>?</p>
+      ]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <shuffleanswers>1</shuffleanswers>
+    <single>true</single>
+    <answernumbering>abc</answernumbering>
+
+    <answer fraction="0">
+      <text>Відносно .grandparent</text>
+      <feedback><text>Ні. .grandparent має position: static, тому він не є позиціонованим контейнером для absolute.</text></feedback>
+    </answer>
+    <answer fraction="100">
+      <text>Відносно .parent</text>
+      <feedback><text>Правильно! position: absolute шукає найближчого предка з position відмінним від static. .parent має position: relative — він і стає контейнером.</text></feedback>
+    </answer>
+    <answer fraction="0">
+      <text>Відносно &lt;body&gt;</text>
+      <feedback><text>Ні. До body прив'язався б лише якщо жоден з предків не мав би position відмінний від static.</text></feedback>
+    </answer>
+    <answer fraction="0">
+      <text>Відносно вікна браузера (viewport)</text>
+      <feedback><text>Ні. Прив'язка до viewport — це поведінка position: fixed, а не absolute.</text></feedback>
+    </answer>
+  </question>
+
+  <!-- ══════════════════════════════════════════════════
+       ПИТАННЯ 3 — одиночний вибір
+       Тема: position fixed
+       ══════════════════════════════════════════════════ -->
+  <question type="multichoice">
+    <name>
+      <text>CSS Positioning — Q3: position fixed і скрол</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[
+        <p>Яка відмінна ознака елемента з <code>position: fixed</code> на відміну від <code>position: absolute</code>?</p>
+      ]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <shuffleanswers>1</shuffleanswers>
+    <single>true</single>
+    <answernumbering>abc</answernumbering>
+
+    <answer fraction="0">
+      <text>fixed завжди розміщується в центрі сторінки</text>
+      <feedback><text>Ні. fixed не має автоматичного центрування — його позиція визначається властивостями top, right, bottom, left.</text></feedback>
+    </answer>
+    <answer fraction="0">
+      <text>fixed прив'язується до найближчого батька з position: relative</text>
+      <feedback><text>Ні. Це поведінка absolute. Fixed ігнорує всіх батьків.</text></feedback>
+    </answer>
+    <answer fraction="100">
+      <text>fixed прив'язується до вікна браузера і не рухається при прокручуванні сторінки</text>
+      <feedback><text>Правильно! position: fixed завжди прив'язаний до viewport. Саме тому його використовують для навбарів, кнопок "вгору", чатів підтримки.</text></feedback>
+    </answer>
+    <answer fraction="0">
+      <text>fixed займає місце в нормальному потоці документа</text>
+      <feedback><text>Ні. Як і absolute, fixed виводить елемент з нормального потоку — місце в розмітці не зберігається.</text></feedback>
+    </answer>
+  </question>
+
+  <!-- ══════════════════════════════════════════════════
+       ПИТАННЯ 4 — одиночний вибір
+       Тема: z-index
+       ══════════════════════════════════════════════════ -->
+  <question type="multichoice">
+    <name>
+      <text>CSS Positioning — Q4: z-index і вимоги</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[
+        <p>Розглянь два елементи:</p>
+        <pre style="background:#f4f4f4;padding:10px;border-radius:4px;">
+.elem-a { z-index: 999; }
+.elem-b { position: absolute; z-index: 1; }
+        </pre>
+        <p>Який елемент відображатиметься поверх іншого?</p>
+      ]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <shuffleanswers>1</shuffleanswers>
+    <single>true</single>
+    <answernumbering>abc</answernumbering>
+
+    <answer fraction="0">
+      <text>elem-a, бо має більший z-index (999 &gt; 1)</text>
+      <feedback><text>Ні. У elem-a відсутній position (або він static). z-index не працює без position відмінного від static.</text></feedback>
+    </answer>
+    <answer fraction="100">
+      <text>elem-b, бо тільки він має position відмінний від static</text>
+      <feedback><text>Правильно! z-index діє лише на позиціоновані елементи (position: relative / absolute / fixed / sticky). elem-a не має position — тому його z-index: 999 ігнорується.</text></feedback>
+    </answer>
+    <answer fraction="0">
+      <text>Порядок залежить від порядку у HTML-документі</text>
+      <feedback><text>Частково вірно для елементів без z-index, але тут елемент b має явний z-index і position — він матиме перевагу.</text></feedback>
+    </answer>
+    <answer fraction="0">
+      <text>Вони не можуть перекриватися, бо мають різні значення position</text>
+      <feedback><text>Ні. Елементи перекриваються незалежно від типу позиціонування.</text></feedback>
+    </answer>
+  </question>
+
+  <!-- ══════════════════════════════════════════════════
+       ПИТАННЯ 5 — множинний вибір
+       Тема: overflow значення
+       ══════════════════════════════════════════════════ -->
+  <question type="multichoice">
+    <name>
+      <text>CSS Positioning — Q5: overflow значення (множинний)</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[
+        <p>Які значення властивості <code>overflow</code> додають смугу прокрутки (scrollbar) до елемента? <strong>Вибери всі правильні відповіді.</strong></p>
+      ]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <shuffleanswers>1</shuffleanswers>
+    <single>false</single>
+    <answernumbering>abc</answernumbering>
+
+    <answer fraction="0">
+      <text>overflow: visible</text>
+      <feedback><text>Ні. visible дозволяє вмісту виходити за межі контейнера — scrollbar не з'являється.</text></feedback>
+    </answer>
+    <answer fraction="0">
+      <text>overflow: hidden</text>
+      <feedback><text>Ні. hidden обрізає вміст, але не додає scrollbar.</text></feedback>
+    </answer>
+    <answer fraction="50">
+      <text>overflow: scroll</text>
+      <feedback><text>Правильно! scroll завжди показує scrollbar — навіть якщо вміст не переповнює контейнер.</text></feedback>
+    </answer>
+    <answer fraction="50">
+      <text>overflow: auto</text>
+      <feedback><text>Правильно! auto показує scrollbar лише коли вміст дійсно не вміщується — це найбільш "розумне" значення.</text></feedback>
+    </answer>
+  </question>
+
+  <!-- ══════════════════════════════════════════════════
+       ПИТАННЯ 6 — одиночний вибір
+       Тема: visibility vs display: none
+       ══════════════════════════════════════════════════ -->
+  <question type="multichoice">
+    <name>
+      <text>CSS Positioning — Q6: visibility hidden vs display none</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[
+        <p>Є три елементи підряд: A, B, C. До елемента B застосовано <code>visibility: hidden</code>.</p>
+        <p>Що відбудеться з розташуванням елементів A і C?</p>
+      ]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <shuffleanswers>1</shuffleanswers>
+    <single>true</single>
+    <answernumbering>abc</answernumbering>
+
+    <answer fraction="0">
+      <text>C підтягнеться до A — місце після B звільниться</text>
+      <feedback><text>Ні. Це поведінка display: none. visibility: hidden лише робить елемент невидимим, але місце зберігається.</text></feedback>
+    </answer>
+    <answer fraction="100">
+      <text>A і C залишаться на своїх місцях — B невидимий, але займає місце</text>
+      <feedback><text>Правильно! visibility: hidden робить елемент прозорим для ока, але він продовжує займати своє місце в потоці. Сусідні елементи не зміщуються.</text></feedback>
+    </answer>
+    <answer fraction="0">
+      <text>Усі три елементи зникнуть</text>
+      <feedback><text>Ні. visibility: hidden застосовується лише до конкретного елемента (і його нащадків), якщо не задано інше.</text></feedback>
+    </answer>
+    <answer fraction="0">
+      <text>B стане напівпрозорим (50% opacity)</text>
+      <feedback><text>Ні. visibility: hidden робить елемент повністю невидимим. Для напівпрозорості використовують opacity: 0.5.</text></feedback>
+    </answer>
+  </question>
+
+  <!-- ══════════════════════════════════════════════════
+       ПИТАННЯ 7 — одиночний вибір
+       Тема: position sticky умови роботи
+       ══════════════════════════════════════════════════ -->
+  <question type="multichoice">
+    <name>
+      <text>CSS Positioning — Q7: position sticky — умови роботи</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[
+        <p>Розробник додав до заголовка секції такий стиль:</p>
+        <pre style="background:#f4f4f4;padding:10px;border-radius:4px;">
+.section-title {
+  position: sticky;
+  top: 0;
+}
+        </pre>
+        <p>Але "прилипання" не працює. Яка найбільш вірогідна причина?</p>
+      ]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <shuffleanswers>1</shuffleanswers>
+    <single>true</single>
+    <answernumbering>abc</answernumbering>
+
+    <answer fraction="0">
+      <text>Потрібно також вказати left: 0</text>
+      <feedback><text>Ні. Для вертикального sticky достатньо top. left не є обов'язковим.</text></feedback>
+    </answer>
+    <answer fraction="0">
+      <text>position: sticky не підтримується сучасними браузерами</text>
+      <feedback><text>Ні. sticky підтримується всіма сучасними браузерами (Chrome, Firefox, Safari, Edge).</text></feedback>
+    </answer>
+    <answer fraction="100">
+      <text>Один з батьківських елементів має overflow: hidden або overflow: auto</text>
+      <feedback><text>Правильно! Це найпоширеніша причина. Якщо батько "ховає" переповнення, sticky елемент не має скролящого контейнера для "прилипання". Треба перевірити всіх батьків аж до body.</text></feedback>
+    </answer>
+    <answer fraction="0">
+      <text>Елемент повинен мати фіксовану висоту для роботи sticky</text>
+      <feedback><text>Ні. Висота елемента не впливає на роботу position: sticky.</text></feedback>
+    </answer>
+  </question>
+
+  <!-- ══════════════════════════════════════════════════
+       ПИТАННЯ 8 — одиночний вибір
+       Тема: overflow-x / overflow-y
+       ══════════════════════════════════════════════════ -->
+  <question type="multichoice">
+    <name>
+      <text>CSS Positioning — Q8: overflow-x та overflow-y</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[
+        <p>Потрібно зробити блок коду, де:</p>
+        <ul>
+          <li>довгі рядки прокручуються <strong>горизонтально</strong></li>
+          <li>вертикальний вміст <strong>обрізається</strong> (не виходить за межі)</li>
+        </ul>
+        <p>Який CSS це реалізує?</p>
+      ]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <shuffleanswers>1</shuffleanswers>
+    <single>true</single>
+    <answernumbering>abc</answernumbering>
+
+    <answer fraction="0">
+      <text>overflow: scroll;</text>
+      <feedback><text>Ні. Це додасть скролбар в обох напрямках, але вертикальний вміст не буде обрізатись.</text></feedback>
+    </answer>
+    <answer fraction="0">
+      <text>overflow-x: hidden; overflow-y: auto;</text>
+      <feedback><text>Ні. Це обріже горизонтальний вміст і додасть вертикальний скрол — навпаки від завдання.</text></feedback>
+    </answer>
+    <answer fraction="100">
+      <text>overflow-x: auto; overflow-y: hidden;</text>
+      <feedback><text>Правильно! overflow-x: auto додає горизонтальний скрол за потребою, а overflow-y: hidden обрізає вертикальний вміст.</text></feedback>
+    </answer>
+    <answer fraction="0">
+      <text>overflow: auto hidden;</text>
+      <feedback><text>Ні. Такий синтаксис скорочення не підтримується в CSS. Потрібно окремо вказувати overflow-x і overflow-y.</text></feedback>
+    </answer>
+  </question>
+
+  <!-- ══════════════════════════════════════════════════
+       ПИТАННЯ 9 — множинний вибір
+       Тема: які значення position виводять з потоку
+       ══════════════════════════════════════════════════ -->
+  <question type="multichoice">
+    <name>
+      <text>CSS Positioning — Q9: які значення виводять з потоку (множинний)</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[
+        <p>Які значення властивості <code>position</code> <strong>виводять елемент з нормального потоку документа</strong> (тобто елемент більше не займає місця в розмітці)? <strong>Вибери всі правильні відповіді.</strong></p>
+      ]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <shuffleanswers>1</shuffleanswers>
+    <single>false</single>
+    <answernumbering>abc</answernumbering>
+
+    <answer fraction="0">
+      <text>position: static</text>
+      <feedback><text>Ні. static — це значення за замовчуванням, елемент залишається в нормальному потоці.</text></feedback>
+    </answer>
+    <answer fraction="0">
+      <text>position: relative</text>
+      <feedback><text>Ні. relative зміщує елемент візуально, але його місце в потоці зберігається.</text></feedback>
+    </answer>
+    <answer fraction="50">
+      <text>position: absolute</text>
+      <feedback><text>Правильно! absolute повністю виводить елемент з потоку — сусідні елементи його ігнорують.</text></feedback>
+    </answer>
+    <answer fraction="50">
+      <text>position: fixed</text>
+      <feedback><text>Правильно! fixed також виводить елемент з потоку і прив'язує його до viewport.</text></feedback>
+    </answer>
+    <answer fraction="0">
+      <text>position: sticky</text>
+      <feedback><text>Ні. sticky частково залишається в потоці — до досягнення порогу поводиться як relative.</text></feedback>
+    </answer>
+  </question>
+
+  <!-- ══════════════════════════════════════════════════
+       ПИТАННЯ 10 — одиночний вибір
+       Тема: центрування через absolute + transform
+       ══════════════════════════════════════════════════ -->
+  <question type="multichoice">
+    <name>
+      <text>CSS Positioning — Q10: центрування через transform</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[
+        <p>Розглянь CSS для модального вікна:</p>
+        <pre style="background:#f4f4f4;padding:10px;border-radius:4px;">
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+        </pre>
+        <p>Навіщо потрібен рядок <code>transform: translate(-50%, -50%)</code>?</p>
+      ]]></text>
+    </questiontext>
+    <defaultgrade>1</defaultgrade>
+    <shuffleanswers>1</shuffleanswers>
+    <single>true</single>
+    <answernumbering>abc</answernumbering>
+
+    <answer fraction="0">
+      <text>Щоб зробити вікно напівпрозорим</text>
+      <feedback><text>Ні. Прозорість задається через opacity. transform: translate відповідає за зміщення елемента.</text></feedback>
+    </answer>
+    <answer fraction="0">
+      <text>top: 50%; left: 50% поміщає центр елемента в центр екрану — translate не потрібен</text>
+      <feedback><text>Ні. top: 50%; left: 50% поміщає в центр екрану лівий верхній кут елемента, а не його центр. Тому вікно буде зміщене вправо-вниз відносно центру.</text></feedback>
+    </answer>
+    <answer fraction="100">
+      <text>top/left ставить лівий верхній кут елемента в центр екрану, а translate(-50%, -50%) зміщує елемент на половину його власної ширини і висоти назад — досягаючи справжнього центрування</text>
+      <feedback><text>Правильно! Це класичний трюк CSS. Спочатку лівий верхній кут в центрі, потім transform зміщує елемент на -50% його власного розміру — і центр елемента збігається з центром екрану.</text></feedback>
+    </answer>
+    <answer fraction="0">
+      <text>Без transform модальне вікно не отримає position: fixed</text>
+      <feedback><text>Ні. position: fixed не залежить від transform. Вони є незалежними властивостями.</text></feedback>
+    </answer>
+  </question>
+
+</quiz>

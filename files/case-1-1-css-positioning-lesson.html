@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Позиціонування в CSS — Урок</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Onest:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3347;
+    --accent: #4f8ef7;
+    --accent2: #7c5cfc;
+    --green: #3dd68c;
+    --orange: #f5a623;
+    --red: #f76f6f;
+    --text: #e8eaf0;
+    --text-muted: #7a82a0;
+    --code-bg: #141720;
+    --radius: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Onest', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 16px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #0f1117 0%, #1a1d27 50%, #151929 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 24px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%; transform: translateX(-50%);
+    width: 500px; height: 300px;
+    background: radial-gradient(ellipse, rgba(79,142,247,.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-badge {
+    display: inline-block;
+    background: rgba(79,142,247,.12);
+    border: 1px solid rgba(79,142,247,.3);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+  header h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    letter-spacing: -.02em;
+    margin-bottom: 10px;
+  }
+  header h1 span { color: var(--accent); }
+  header p { color: var(--text-muted); font-size: 15px; }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 10px 24px;
+  }
+  nav a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 6px;
+    white-space: nowrap;
+    transition: all .2s;
+  }
+  nav a:hover { background: var(--surface2); color: var(--text); }
+
+  /* ── MAIN LAYOUT ── */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* ── SECTION ── */
+  .section {
+    margin-bottom: 56px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: -.01em;
+  }
+
+  /* ── THEORY CARD ── */
+  .theory {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 20px;
+  }
+  .theory p { color: var(--text); margin-bottom: 12px; }
+  .theory p:last-child { margin-bottom: 0; }
+
+  /* ── PROPERTY TABLE ── */
+  .prop-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .prop-table th {
+    background: var(--surface2);
+    color: var(--text-muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .prop-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .prop-table tr:last-child td { border-bottom: none; }
+  .prop-table tr:hover td { background: rgba(255,255,255,.02); }
+  .badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  .badge-blue { background: rgba(79,142,247,.15); color: var(--accent); }
+  .badge-green { background: rgba(61,214,140,.15); color: var(--green); }
+  .badge-orange { background: rgba(245,166,35,.15); color: var(--orange); }
+  .badge-purple { background: rgba(124,92,252,.15); color: var(--accent2); }
+  .badge-red { background: rgba(247,111,111,.15); color: var(--red); }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 16px 0;
+  }
+  .code-header {
+    background: var(--surface2);
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .code-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    margin-left: auto;
+  }
+  .code-block pre {
+    padding: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13.5px;
+    line-height: 1.7;
+    overflow-x: auto;
+    color: var(--text);
+  }
+  .kw { color: #c792ea; }
+  .prop { color: #82aaff; }
+  .val { color: #c3e88d; }
+  .sel { color: #ffcb6b; }
+  .cmt { color: #546e7a; font-style: italic; }
+  .str { color: #f07178; }
+
+  /* ── DEMO BOX ── */
+  .demo-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 20px 0;
+  }
+  .demo-label {
+    background: var(--surface2);
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--green);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .demo-label::before {
+    content: '▶';
+    font-size: 10px;
+  }
+  .demo-area {
+    padding: 24px;
+    min-height: 120px;
+    position: relative;
+  }
+
+  /* Demo Styles */
+  .demo-box {
+    background: rgba(79,142,247,.2);
+    border: 2px solid var(--accent);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+    display: inline-block;
+  }
+  .demo-parent {
+    background: rgba(124,92,252,.1);
+    border: 2px dashed var(--accent2);
+    border-radius: 8px;
+    padding: 16px;
+    position: relative;
+    min-height: 120px;
+  }
+  .demo-parent-label {
+    font-size: 11px;
+    color: var(--accent2);
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 12px;
+  }
+
+  /* ── INTERACTIVE DEMO ── */
+  .interactive-demo {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 20px 0;
+  }
+  .interactive-header {
+    background: var(--surface2);
+    padding: 10px 16px;
+    font-size: 12px;
+    color: var(--orange);
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .interactive-header::before { content: '⚡'; }
+  .controls {
+    padding: 16px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+  }
+  .ctrl-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .ctrl-btn:hover, .ctrl-btn.active {
+    background: rgba(79,142,247,.2);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .ctrl-label { font-size: 12px; color: var(--text-muted); }
+  .interactive-stage {
+    padding: 24px;
+    min-height: 180px;
+    position: relative;
+    overflow: hidden;
+  }
+  .code-display {
+    padding: 12px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    background: var(--code-bg);
+  }
+  .code-display span { color: var(--accent); }
+
+  /* ── QUESTION BLOCK ── */
+  .question-block {
+    background: linear-gradient(135deg, rgba(79,142,247,.05), rgba(124,92,252,.05));
+    border: 1px solid rgba(79,142,247,.25);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin: 28px 0;
+  }
+  .question-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: 12px;
+  }
+  .question-label::before {
+    content: '?';
+    width: 22px; height: 22px;
+    background: var(--accent);
+    color: var(--bg);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .question-text {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+  .answer-toggle {
+    background: none;
+    border: 1px solid rgba(61,214,140,.3);
+    color: var(--green);
+    font-family: 'Onest', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all .2s;
+  }
+  .answer-toggle:hover {
+    background: rgba(61,214,140,.1);
+    border-color: var(--green);
+  }
+  .answer-toggle .arrow {
+    transition: transform .3s;
+    font-size: 10px;
+  }
+  .answer-toggle.open .arrow { transform: rotate(90deg); }
+  .answer-content {
+    margin-top: 14px;
+    display: none;
+    background: rgba(61,214,140,.06);
+    border: 1px solid rgba(61,214,140,.2);
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 14px;
+    line-height: 1.7;
+    animation: fadeIn .3s ease;
+  }
+  .answer-content.open { display: block; }
+  .answer-content code {
+    font-family: 'JetBrains Mono', monospace;
+    background: rgba(0,0,0,.3);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 13px;
+    color: var(--green);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── INFO BOX ── */
+  .info-box {
+    border-left: 3px solid var(--accent);
+    background: rgba(79,142,247,.06);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .warning-box {
+    border-left: 3px solid var(--orange);
+    background: rgba(245,166,35,.06);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .warning-box strong, .info-box strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+  .info-box strong { color: var(--accent); }
+  .warning-box strong { color: var(--orange); }
+
+  /* ── Z-INDEX DEMO ── */
+  .zindex-stage {
+    position: relative;
+    height: 160px;
+    background: var(--code-bg);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .zi-box {
+    position: absolute;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all .4s ease;
+    cursor: pointer;
+  }
+
+  /* ── OVERFLOW DEMO ── */
+  .overflow-demo-row {
+    display: flex; gap: 12px; flex-wrap: wrap;
+    margin: 12px 0;
+  }
+  .of-box {
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    width: 150px; height: 80px;
+    padding: 8px;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--code-bg);
+    position: relative;
+  }
+  .of-box-label {
+    /* position: absolute; */
+    /* top: -10px; left: 8px; */
+    background: var(--bg);
+    font-size: 10px;
+    color: var(--accent);
+    padding: 0 4px;
+  }
+  .of-content {
+    color: var(--text-muted);
+    font-size: 10px;
+    line-height: 1.5;
+    word-break: break-word;
+  }
+
+  /* ── VISIBILITY DEMO ── */
+  .vis-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .vis-card {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+  }
+  .vis-card-title {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 12px;
+  }
+  .vis-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: all .2s;
+    display: block;
+    width: 100%;
+  }
+  .vis-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .vis-target {
+    background: rgba(79,142,247,.15);
+    border: 1px solid rgba(79,142,247,.3);
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+    transition: all .3s;
+  }
+  .vis-placeholder {
+    background: rgba(255,255,255,.03);
+    border: 1px dashed var(--border);
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  /* ── STICKY DEMO ── */
+  .sticky-demo-outer {
+    height: 200px;
+    overflow-y: auto;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .sticky-header-demo {
+    position: sticky;
+    top: 0;
+    background: rgba(79,142,247,.9);
+    color: white;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    backdrop-filter: blur(8px);
+    z-index: 10;
+  }
+  .sticky-content {
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 2;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .vis-compare { grid-template-columns: 1fr; }
+    .overflow-demo-row { gap: 8px; }
+    .of-box { width: 130px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-badge">CSS — Урок 5</div>
+  <h1>Позиціонування в <span>CSS</span></h1>
+  <p>Для початківців · Інтерактивні демонстрації · Контрольні питання</p>
+</header>
+
+<nav>
+  <a href="#s1">1. position</a>
+  <a href="#s2">2. top/left/right/bottom</a>
+  <a href="#s3">3. z-index</a>
+  <a href="#s4">4. overflow</a>
+  <a href="#s5">5. visibility</a>
+  <a href="#s6">6. sticky</a>
+</nav>
+
+<main>
+
+<!-- ══════════════════════════════════════════════════════
+     БЛОК 1 — property position
+     ══════════════════════════════════════════════════════ -->
+<section class="section" id="s1">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <h2>Властивість <code style="font-family:'JetBrains Mono';color:var(--accent)">position</code></h2>
+  </div>
+
+  <div class="theory">
+    <p>За замовчуванням усі елементи розміщуються один за одним — зверху вниз, зліва направо. Але іноді потрібно <strong>«вирвати» елемент із цього потоку</strong> і розмістити його точно там, де потрібно. Саме для цього існує властивість <code style="font-family:'JetBrains Mono'">position</code>.</p>
+  </div>
+
+  <table class="prop-table">
+    <thead>
+      <tr><th>Значення</th><th>Що робить</th><th>Чи виходить з потоку?</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="badge badge-blue">static</span></td>
+        <td>Стандартне значення. Елемент стоїть там, де природньо.</td>
+        <td>❌ Ні</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-green">relative</span></td>
+        <td>Зміщується відносно <em>свого нормального місця</em>.</td>
+        <td>❌ Ні (місце зберігається)</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-orange">absolute</span></td>
+        <td>Прив'язується до найближчого батька з <code style="font-family:'JetBrains Mono'">position</code> ≠ static.</td>
+        <td>✅ Так</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-purple">fixed</span></td>
+        <td>Прив'язується до вікна браузера. Не рухається при скролі.</td>
+        <td>✅ Так</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-red">sticky</span></td>
+        <td>Поводиться як relative, але «прилипає» при скролі.</td>
+        <td>Частково</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- INTERACTIVE: position switcher -->
+  <div class="interactive-demo">
+    <div class="interactive-header">Інтерактивна демонстрація — position</div>
+    <div class="controls">
+      <span class="ctrl-label">Вибери position:</span>
+      <button class="ctrl-btn active" onclick="setPos('static')">static</button>
+      <button class="ctrl-btn" onclick="setPos('relative')">relative</button>
+      <button class="ctrl-btn" onclick="setPos('absolute')">absolute</button>
+      <button class="ctrl-btn" onclick="setPos('fixed_demo')">fixed</button>
+    </div>
+    <div class="interactive-stage" id="posStage">
+      <div style="background:rgba(255,255,255,.04);border:1px dashed var(--border);border-radius:6px;padding:14px;display:inline-block;margin-right:12px;vertical-align:top;">
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">Батьківський div (position: relative)</div>
+        <div class="demo-box" id="demoEl" style="transition:all .4s ease">
+          📦 Елемент
+        </div>
+      </div>
+      <div style="display:inline-block;vertical-align:top;margin-top:4px;">
+        <div id="posNote" style="font-size:13px;color:var(--text-muted);max-width:240px;line-height:1.6">
+          Елемент стоїть у нормальному потоці
+        </div>
+      </div>
+    </div>
+    <div class="code-display" id="posCode">
+      position: <span>static</span>;
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <div class="code-dot" style="background:#f76f6f"></div>
+      <div class="code-dot" style="background:#f5a623"></div>
+      <div class="code-dot" style="background:#3dd68c"></div>
+      <span class="code-label">CSS</span>
+    </div>
+    <pre><span class="sel">.box</span> {
+  <span class="prop">position</span>: <span class="val">relative</span>;  <span class="cmt">/* зміщуємо відносно свого місця */</span>
+  <span class="prop">top</span>: <span class="val">20px</span>;
+  <span class="prop">left</span>: <span class="val">30px</span>;
+}
+
+<span class="sel">.overlay</span> {
+  <span class="prop">position</span>: <span class="val">absolute</span>; <span class="cmt">/* прив'язуємо до батька */</span>
+  <span class="prop">top</span>: <span class="val">0</span>;
+  <span class="prop">right</span>: <span class="val">0</span>;
+}
+
+<span class="sel">.navbar</span> {
+  <span class="prop">position</span>: <span class="val">fixed</span>;   <span class="cmt">/* завжди зверху екрану */</span>
+  <span class="prop">top</span>: <span class="val">0</span>;
+  <span class="prop">width</span>: <span class="val">100%</span>;
+}</pre>
+  </div>
+
+  <!-- ПИТАННЯ 1 -->
+  <div class="question-block">
+    <div class="question-label">Питання 1</div>
+    <div class="question-text">Яке значення <code style="font-family:'JetBrains Mono'">position</code> використовують, щоб елемент <strong>завжди залишався у верхньому правому куті екрану</strong>, навіть при скролі?</div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">
+      <span class="arrow">▶</span> Показати відповідь
+    </button>
+    <div class="answer-content">
+      <strong>Відповідь: <code>position: fixed</code></strong><br><br>
+      <code>fixed</code> прив'язує елемент до <em>вікна браузера</em> (viewport), а не до батьківського елемента. Тому він не рухається при прокручуванні. Саме так реалізовують шапки сайтів, кнопки "нагору" та чати підтримки.
+    </div>
+  </div>
+
+  <!-- ПИТАННЯ 2 -->
+  <div class="question-block">
+    <div class="question-label">Питання 2</div>
+    <div class="question-text">Є два елементи: А і Б. Елемент А має <code style="font-family:'JetBrains Mono'">position: relative</code>. Елемент Б всередині А має <code style="font-family:'JetBrains Mono'">position: absolute; top: 0; left: 0</code>. Де розміститься елемент Б?</div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">
+      <span class="arrow">▶</span> Показати відповідь
+    </button>
+    <div class="answer-content">
+      <strong>У верхньому лівому куті елемента А.</strong><br><br>
+      <code>absolute</code> шукає найближчого батька, у якого <code>position</code> відрізняється від <code>static</code>. Знайшов А (<code>relative</code>) — прив'язався до нього. Якби А мав <code>position: static</code>, то Б прив'язався б до наступного батька вгору, аж до <code>&lt;body&gt;</code>.
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     БЛОК 2 — top / left / right / bottom
+     ══════════════════════════════════════════════════════ -->
+<section class="section" id="s2">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <h2>Властивості <code style="font-family:'JetBrains Mono';color:var(--accent)">top / right / bottom / left</code></h2>
+  </div>
+
+  <div class="theory">
+    <p>Ці чотири властивості задають <strong>відстань від відповідного краю</strong> батьківського контейнера (або viewport для fixed). Вони <em>не працюють</em> якщо <code style="font-family:'JetBrains Mono'">position: static</code>.</p>
+  </div>
+
+  <div class="info-box">
+    <strong>💡 Важливо</strong>
+    <code style="font-family:'JetBrains Mono'">top: 20px</code> означає "відступ 20px від верхнього краю батька", а не "зміщення вниз". Для <code style="font-family:'JetBrains Mono'">relative</code> — відступ від власного нормального місця.
+  </div>
+
+  <!-- Interactive TRBL demo -->
+  <div class="interactive-demo">
+    <div class="interactive-header">Зміни координати — дивись що відбувається</div>
+    <div class="controls">
+      <span class="ctrl-label">top:</span>
+      <input type="range" id="rTop" min="0" max="100" value="10" oninput="updateTRBL()" style="accent-color:var(--accent)">
+      <span class="ctrl-label">left:</span>
+      <input type="range" id="rLeft" min="0" max="200" value="10" oninput="updateTRBL()" style="accent-color:var(--accent)">
+    </div>
+    <div class="interactive-stage" style="height:160px;">
+      <div style="position:relative;width:100%;height:120px;background:rgba(124,92,252,.08);border:2px dashed rgba(124,92,252,.4);border-radius:8px;">
+        <span style="font-size:10px;color:var(--accent2);padding:4px 8px;font-family:'JetBrains Mono'">батько (position: relative)</span>
+        <div class="demo-box" id="trblEl" style="position:absolute;top:10px;left:10px;transition:all .15s">
+          📦
+        </div>
+      </div>
+    </div>
+    <div class="code-display" id="trblCode">
+      position: <span>absolute</span>; top: <span id="tv">10</span>px; left: <span id="lv">10</span>px;
+    </div>
+  </div>
+
+  <div class="warning-box">
+    <strong>⚠️ Типова помилка</strong>
+    Якщо батько має <code style="font-family:'JetBrains Mono'">position: static</code> (за замовчуванням), то <code style="font-family:'JetBrains Mono'">absolute</code> дочірнього елемента прив'яжеться до <code style="font-family:'JetBrains Mono'">&lt;body&gt;</code>. Рішення — додати батьку <code style="font-family:'JetBrains Mono'">position: relative</code>.
+  </div>
+
+  <!-- ПИТАННЯ 3 -->
+  <div class="question-block">
+    <div class="question-label">Питання 3</div>
+    <div class="question-text">Що станеться, якщо задати елементу <code style="font-family:'JetBrains Mono'">position: static; top: 50px</code>?</div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">
+      <span class="arrow">▶</span> Показати відповідь
+    </button>
+    <div class="answer-content">
+      <strong>Нічого не станеться.</strong><br><br>
+      Властивості <code>top</code>, <code>left</code>, <code>right</code>, <code>bottom</code> ігноруються браузером, якщо <code>position: static</code>. Для того щоб вони запрацювали, потрібно змінити position на <code>relative</code>, <code>absolute</code>, <code>fixed</code> або <code>sticky</code>.
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     БЛОК 3 — z-index
+     ══════════════════════════════════════════════════════ -->
+<section class="section" id="s3">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <h2>Властивість <code style="font-family:'JetBrains Mono';color:var(--accent)">z-index</code></h2>
+  </div>
+
+  <div class="theory">
+    <p>Коли елементи перекриваються, <code style="font-family:'JetBrains Mono'">z-index</code> визначає <strong>хто буде зверху</strong>. Уяви стопку паперів — той, у кого більший <code style="font-family:'JetBrains Mono'">z-index</code>, лежить вище.</p>
+    <p>Значення може бути будь-яким цілим числом (навіть від'ємним). Але <code style="font-family:'JetBrains Mono'">z-index</code> <strong>не працює без position</strong> (крім static).</p>
+  </div>
+
+  <div class="demo-container">
+    <div class="demo-label">Демо — клікни на блоки, щоб змінити z-index</div>
+    <div class="demo-area">
+      <div class="zindex-stage" id="ziStage">
+        <div class="zi-box" id="zi1" onclick="bumpZ('zi1')" style="width:140px;height:90px;top:20px;left:20px;background:rgba(79,142,247,.8);border:2px solid var(--accent);z-index:1">
+          z: <span id="z1val">1</span>
+        </div>
+        <div class="zi-box" id="zi2" onclick="bumpZ('zi2')" style="width:140px;height:90px;top:40px;left:80px;background:rgba(124,92,252,.8);border:2px solid var(--accent2);z-index:2">
+          z: <span id="z2val">2</span>
+        </div>
+        <div class="zi-box" id="zi3" onclick="bumpZ('zi3')" style="width:140px;height:90px;top:30px;left:150px;background:rgba(61,214,140,.8);border:2px solid var(--green);z-index:3">
+          z: <span id="z3val">3</span>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--text-muted);margin-top:10px">Клікни будь-який блок — він отримає найбільший z-index і вийде на перший план</p>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <div class="code-dot" style="background:#f76f6f"></div>
+      <div class="code-dot" style="background:#f5a623"></div>
+      <div class="code-dot" style="background:#3dd68c"></div>
+      <span class="code-label">CSS</span>
+    </div>
+    <pre><span class="sel">.modal-overlay</span> {
+  <span class="prop">position</span>: <span class="val">fixed</span>;
+  <span class="prop">z-index</span>: <span class="val">1000</span>; <span class="cmt">/* над усім іншим */</span>
+}
+
+<span class="sel">.tooltip</span> {
+  <span class="prop">position</span>: <span class="val">absolute</span>;
+  <span class="prop">z-index</span>: <span class="val">500</span>;
+}
+
+<span class="sel">.background-shape</span> {
+  <span class="prop">position</span>: <span class="val">absolute</span>;
+  <span class="prop">z-index</span>: <span class="val">-1</span>; <span class="cmt">/* позаду тексту */</span>
+}</pre>
+  </div>
+
+  <!-- ПИТАННЯ 4 -->
+  <div class="question-block">
+    <div class="question-label">Питання 4</div>
+    <div class="question-text">Елемент A має <code style="font-family:'JetBrains Mono'">z-index: 100</code>, елемент B — <code style="font-family:'JetBrains Mono'">z-index: 5</code>. Обидва <code style="font-family:'JetBrains Mono'">position: absolute</code>. Який елемент буде зверху?</div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">
+      <span class="arrow">▶</span> Показати відповідь
+    </button>
+    <div class="answer-content">
+      <strong>Елемент A (z-index: 100).</strong><br><br>
+      Більший <code>z-index</code> = вищий шар. Зверни увагу: <code>z-index</code> порівнюється лише між елементами в одному <em>stacking context</em>. Якщо батьки мають різні <code>z-index</code>, порівнюються вже вони.
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     БЛОК 4 — overflow
+     ══════════════════════════════════════════════════════ -->
+<section class="section" id="s4">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <h2>Властивість <code style="font-family:'JetBrains Mono';color:var(--accent)">overflow</code></h2>
+  </div>
+
+  <div class="theory">
+    <p>Що робити, якщо вміст <strong>не вміщується</strong> в контейнер? Властивість <code style="font-family:'JetBrains Mono'">overflow</code> задає поведінку в такому випадку. Також є окремі <code style="font-family:'JetBrains Mono'">overflow-x</code> та <code style="font-family:'JetBrains Mono'">overflow-y</code> для горизонтального і вертикального напрямків.</p>
+  </div>
+
+  <table class="prop-table">
+    <thead>
+      <tr><th>Значення</th><th>Що відбувається з контентом, що не влізає</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="badge badge-blue">visible</span></td><td>Виходить за межі контейнера (за замовчуванням)</td></tr>
+      <tr><td><span class="badge badge-orange">hidden</span></td><td>Обрізається, не відображається</td></tr>
+      <tr><td><span class="badge badge-green">scroll</span></td><td>Завжди показує полосу прокрутки</td></tr>
+      <tr><td><span class="badge badge-purple">auto</span></td><td>Показує полосу прокрутки тільки якщо потрібно</td></tr>
+    </tbody>
+  </table>
+
+  <div class="demo-container">
+    <div class="demo-label">Демо — overflow варіанти</div>
+    <div class="demo-area">
+      <div class="overflow-demo-row">
+        <div class="of-box" style="overflow:visible">
+          <span class="of-box-label">visible</span>
+          <div class="of-content">Цей текст виходить за межі блоку і перекриває сусідні елементи. Дуже довгий текст без обмежень.</div>
+        </div>
+        <div class="of-box" style="overflow:hidden">
+          <span class="of-box-label">hidden</span>
+          <div class="of-content">Цей текст обрізається на межі блоку. Дуже довгий текст без обмежень.</div>
+        </div>
+        <div class="of-box" style="overflow:scroll">
+          <span class="of-box-label">scroll</span>
+          <div class="of-content">Завжди є скролбар. Цей текст можна прокрутити всередині блоку. Ще текст.</div>
+        </div>
+        <div class="of-box" style="overflow:auto">
+          <span class="of-box-label">auto</span>
+          <div class="of-content">Скролбар тільки за потребою. Цей текст можна прокрутити. Ще більше тексту тут.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header">
+      <div class="code-dot" style="background:#f76f6f"></div>
+      <div class="code-dot" style="background:#f5a623"></div>
+      <div class="code-dot" style="background:#3dd68c"></div>
+      <span class="code-label">CSS</span>
+    </div>
+    <pre><span class="sel">.card</span> {
+  <span class="prop">height</span>: <span class="val">200px</span>;
+  <span class="prop">overflow</span>: <span class="val">hidden</span>;     <span class="cmt">/* текст обрізається */</span>
+}
+
+<span class="sel">.code-window</span> {
+  <span class="prop">overflow-x</span>: <span class="val">auto</span>;   <span class="cmt">/* горизонтальний скрол */</span>
+  <span class="prop">overflow-y</span>: <span class="val">hidden</span>;  <span class="cmt">/* вертикальний обрізати */</span>
+}
+
+<span class="sel">.scroll-list</span> {
+  <span class="prop">max-height</span>: <span class="val">300px</span>;
+  <span class="prop">overflow-y</span>: <span class="val">auto</span>;   <span class="cmt">/* скрол якщо не влізе */</span>
+}</pre>
+  </div>
+
+  <!-- ПИТАННЯ 5 -->
+  <div class="question-block">
+    <div class="question-label">Питання 5</div>
+    <div class="question-text">Потрібно зробити блок з фіксованою висотою, де текст прокручується вертикально, але не виходить за горизонтальні межі. Які властивості використати?</div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">
+      <span class="arrow">▶</span> Показати відповідь
+    </button>
+    <div class="answer-content">
+      <strong>Відповідь:</strong><br><br>
+      <code>overflow-y: auto</code> (або <code>scroll</code>) — вертикальний скрол<br>
+      <code>overflow-x: hidden</code> — горизонтальне обрізання<br><br>
+      Або коротко: <code>overflow: auto</code> — але тоді скрол може з'явитися в обох напрямках.
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     БЛОК 5 — visibility vs display
+     ══════════════════════════════════════════════════════ -->
+<section class="section" id="s5">
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <h2><code style="font-family:'JetBrains Mono';color:var(--accent)">visibility</code> vs <code style="font-family:'JetBrains Mono';color:var(--accent2)">display: none</code></h2>
+  </div>
+
+  <div class="theory">
+    <p>Обидві властивості "ховають" елемент, але по-різному. Це <strong>найпоширеніша плутанина</strong> у початківців:</p>
+  </div>
+
+  <table class="prop-table">
+    <thead>
+      <tr><th>Властивість</th><th>Видимий?</th><th>Займає місце?</th><th>Коли використовувати</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="badge badge-blue">display: none</span></td>
+        <td>❌</td>
+        <td>❌ Ні</td>
+        <td>Повністю прибрати елемент</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-orange">visibility: hidden</span></td>
+        <td>❌</td>
+        <td>✅ Так</td>
+        <td>Сховати але зберегти розмітку</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-green">opacity: 0</span></td>
+        <td>❌ (прозорий)</td>
+        <td>✅ Так</td>
+        <td>Анімація появи/зникнення</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="demo-container">
+    <div class="demo-label">Демо — порівняй поведінку</div>
+    <div class="demo-area">
+      <div class="vis-compare">
+        <div class="vis-card">
+          <div class="vis-card-title">display: none</div>
+          <button class="vis-btn" onclick="toggleDisplay()">Перемкнути</button>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <div class="vis-target" id="dNone">📦 Блок A</div>
+            <div class="vis-target" style="background:rgba(61,214,140,.15);border-color:rgba(61,214,140,.3);color:var(--green)">📦 Блок B</div>
+          </div>
+          <p id="dNoneNote" style="font-size:11px;color:var(--text-muted);margin-top:8px">Блок B "підтягується" коли A зникає</p>
+        </div>
+        <div class="vis-card">
+          <div class="vis-card-title">visibility: hidden</div>
+          <button class="vis-btn" onclick="toggleVisibility()">Перемкнути</button>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <div class="vis-target" id="vHidden">📦 Блок A</div>
+            <div class="vis-target" style="background:rgba(61,214,140,.15);border-color:rgba(61,214,140,.3);color:var(--green)">📦 Блок B</div>
+          </div>
+          <p id="vHiddenNote" style="font-size:11px;color:var(--text-muted);margin-top:8px">Блок B залишається на місці</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ПИТАННЯ 6 -->
+  <div class="question-block">
+    <div class="question-label">Питання 6</div>
+    <div class="question-text">Ти робиш анімацію: кнопка зникає, а сусідні елементи НЕ повинні зміщуватися. Що використати: <code style="font-family:'JetBrains Mono'">display: none</code> чи <code style="font-family:'JetBrains Mono'">visibility: hidden</code>?</div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">
+      <span class="arrow">▶</span> Показати відповідь
+    </button>
+    <div class="answer-content">
+      <strong>visibility: hidden</strong><br><br>
+      Оскільки <code>visibility: hidden</code> зберігає місце елемента в розмітці, сусідні елементи не зміщуються. Крім того, для плавних анімацій зручно поєднувати з <code>opacity: 0</code> та <code>transition</code>.
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     БЛОК 6 — sticky
+     ══════════════════════════════════════════════════════ -->
+<section class="section" id="s6">
+  <div class="section-header">
+    <div class="section-num">6</div>
+    <h2>Практичний кейс: <code style="font-family:'JetBrains Mono';color:var(--accent)">position: sticky</code></h2>
+  </div>
+
+  <div class="theory">
+    <p><code style="font-family:'JetBrains Mono'">sticky</code> — це гібрид <code style="font-family:'JetBrains Mono'">relative</code> і <code style="font-family:'JetBrains Mono'">fixed</code>. Елемент поводиться як <code style="font-family:'JetBrains Mono'">relative</code> до досягнення порогу (threshold), після чого "прилипає" до краю контейнера.</p>
+  </div>
+
+  <div class="demo-container">
+    <div class="demo-label">Демо — прокрути вміст, заголовок "прилипне"</div>
+    <div class="demo-area">
+      <div class="sticky-demo-outer">
+        <div class="sticky-header-demo">📌 position: sticky; top: 0; — я прилипаю!</div>
+        <div class="sticky-content">
+          Рядок контенту 1<br>
+          Рядок контенту 2<br>
+          Рядок контенту 3<br>
+          Рядок контенту 4<br>
+          Рядок контенту 5<br>
+          Рядок контенту 6<br>
+          Рядок контенту 7<br>
+          Рядок контенту 8<br>
+          Рядок контенту 9<br>
+          Рядок контенту 10<br>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="warning-box">
+    <strong>⚠️ Sticky не працює якщо...</strong>
+    Батько має <code style="font-family:'JetBrains Mono'">overflow: hidden</code> або <code style="font-family:'JetBrains Mono'">overflow: auto</code> — тоді sticky перестає "прилипати". Також потрібно обов'язково вказати <code style="font-family:'JetBrains Mono'">top</code>, <code style="font-family:'JetBrains Mono'">bottom</code>, <code style="font-family:'JetBrains Mono'">left</code> або <code style="font-family:'JetBrains Mono'">right</code>.
+  </div>
+
+  <!-- ПИТАННЯ 7 -->
+  <div class="question-block">
+    <div class="question-label">Питання 7</div>
+    <div class="question-text">Ти хочеш зробити "липку" шапку таблиці, яка залишається видимою при прокручуванні таблиці. Але після додавання <code style="font-family:'JetBrains Mono'">position: sticky; top: 0</code> нічого не змінилося. Яка найімовірніша причина?</div>
+    <button class="answer-toggle" onclick="toggleAnswer(this)">
+      <span class="arrow">▶</span> Показати відповідь
+    </button>
+    <div class="answer-content">
+      <strong>Найімовірніша причина: батьківський елемент має <code>overflow: hidden</code> або <code>overflow: auto</code>.</strong><br><br>
+      Для sticky важливо, щоб елемент прокручувався в межах <em>скролящого контейнера</em>. Якщо батько "ховає" переповнення, sticky не матиме простору для "прилипання". Перевір усіх батьків аж до <code>&lt;body&gt;</code>.
+    </div>
+  </div>
+</section>
+
+<!-- ПІДСУМОК -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-num">✓</div>
+    <h2>Що ми вивчили</h2>
+  </div>
+  <div class="theory">
+    <table class="prop-table">
+      <thead>
+        <tr><th>Концепція</th><th>Ключове правило</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="badge badge-blue">position</span></td><td>Визначає систему координат елемента</td></tr>
+        <tr><td><span class="badge badge-green">top/left/right/bottom</span></td><td>Працюють тільки якщо position ≠ static</td></tr>
+        <tr><td><span class="badge badge-orange">z-index</span></td><td>Хто вищий шар — той поверх. Потребує position.</td></tr>
+        <tr><td><span class="badge badge-purple">overflow</span></td><td>Що робити якщо контент не влізає</td></tr>
+        <tr><td><span class="badge badge-red">visibility vs display</span></td><td>hidden зберігає місце, none — ні</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</main>
+
+<script>
+// ── position switcher ──
+const posData = {
+  static: {
+    style: { position:'static', top:'auto', left:'auto', transform:'none' },
+    note: 'Елемент стоїть у нормальному потоці. top/left/right/bottom не діють.',
+    code: 'static'
+  },
+  relative: {
+    style: { position:'relative', top:'20px', left:'30px', transform:'none' },
+    note: 'Зміщений на 20px вниз і 30px праворуч від свого нормального місця. Місце в потоці збережено.',
+    code: 'relative; top: 20px; left: 30px'
+  },
+  absolute: {
+    style: { position:'absolute', top:'8px', left:'auto', right:'8px', transform:'none' },
+    note: 'Прив\'язаний до правого верхнього кута батьківського div. Вийшов з потоку.',
+    code: 'absolute; top: 8px; right: 8px'
+  },
+  fixed_demo: {
+    style: { position:'relative', top:'0', left:'0', background:'rgba(245,166,35,.2)', borderColor:'var(--orange)', color:'var(--orange)', transform:'none' },
+    note: '⚠️ У реальному проєкті fixed прив\'язується до viewport. В цьому демо симуляція: fixed елементи завжди видимі при скролі (навбар, кнопка "вгору").',
+    code: 'fixed; top: 0; left: 0; width: 100%'
+  }
+};
+
+function setPos(val) {
+  const el = document.getElementById('demoEl');
+  const note = document.getElementById('posNote');
+  const code = document.getElementById('posCode');
+  const d = posData[val];
+  Object.assign(el.style, d.style);
+  note.textContent = d.note;
+  code.innerHTML = 'position: <span>' + d.code + '</span>;';
+  document.querySelectorAll('.ctrl-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// ── TRBL sliders ──
+function updateTRBL() {
+  const t = document.getElementById('rTop').value;
+  const l = document.getElementById('rLeft').value;
+  const el = document.getElementById('trblEl');
+  el.style.top = t + 'px';
+  el.style.left = l + 'px';
+  document.getElementById('tv').textContent = t;
+  document.getElementById('lv').textContent = l;
+}
+
+// ── z-index demo ──
+let zMax = 3;
+function bumpZ(id) {
+  zMax++;
+  const el = document.getElementById(id);
+  el.style.zIndex = zMax;
+  const num = id.replace('zi','');
+  document.getElementById('z' + num + 'val').textContent = zMax;
+}
+
+// ── visibility/display demos ──
+let dNoneVisible = true;
+function toggleDisplay() {
+  const el = document.getElementById('dNone');
+  dNoneVisible = !dNoneVisible;
+  el.style.display = dNoneVisible ? '' : 'none';
+  document.getElementById('dNoneNote').textContent = dNoneVisible
+    ? 'Блок B "підтягується" коли A зникає'
+    : 'Блок A зник — Блок B зайняв його місце';
+}
+
+let vHiddenVisible = true;
+function toggleVisibility() {
+  const el = document.getElementById('vHidden');
+  vHiddenVisible = !vHiddenVisible;
+  el.style.visibility = vHiddenVisible ? 'visible' : 'hidden';
+  document.getElementById('vHiddenNote').textContent = vHiddenVisible
+    ? 'Блок B залишається на місці'
+    : 'Блок A невидимий, але місце збережено';
+}
+
+// ── accordion answers ──
+function toggleAnswer(btn) {
+  const content = btn.nextElementSibling;
+  const isOpen = content.classList.contains('open');
+  content.classList.toggle('open', !isOpen);
+  btn.classList.toggle('open', !isOpen);
+  btn.innerHTML = (isOpen ? '<span class="arrow">▶</span> Показати відповідь' : '<span class="arrow">▶</span> Сховати відповідь');
+  if (!isOpen) btn.querySelector('.arrow').style.transform = 'rotate(90deg)';
+  else btn.querySelector('.arrow').style.transform = 'rotate(0)';
+}
+</script>
+</body>
+</html>
